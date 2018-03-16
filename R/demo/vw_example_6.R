@@ -10,7 +10,7 @@
 
 library(rvw)
 library(data.table)
-library(ggplot2)
+library(pROC) # to plot ROC curves
 library(mltools) # needed for some data preparetions
 library(caret) # to compute confusion matrix
 
@@ -113,7 +113,6 @@ roc_list <- list()
 legend_vect <- c()
 color_vect <- c()
 for (i in 1:length(resvw[["models"]])) {
-  print(i)
   # Rescale actual values to {0, 1}
   resvw[["models"]][[i]][["data"]][ actual=="-1", actual:="0" ]
   resvw[["models"]][[i]][["data"]][["actual"]] <- factor(resvw[["models"]][[i]][["data"]][["actual"]])
@@ -124,12 +123,12 @@ for (i in 1:length(resvw[["models"]])) {
   color_vect <- c(color_vect, roc_list[[i]][["color"]])
   print(roc_list[[i]][["color"]])
   if (i == 1) {
-    plot(roc_list[[i]], col= roc_list[[i]][["color"]], title = "ROC curves for individual classifiers OAA")
+    plot(roc_list[[i]], col= roc_list[[i]][["color"]])
   } else {
     plot(roc_list[[i]], add=TRUE, col= roc_list[[i]][["color"]])
   }
 }
-# title(main ="ROC curves for individual classifiers OAA")
+title(main ="ROC curves for individual classifiers OAA")
 legend("bottomright",
        legend=legend_vect,
        col=color_vect, bty="n", lwd=3, title = "Group range for rings variable")
